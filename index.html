@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Private Book Collection</title>
+  <!-- Tailwind CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- ePub.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/epub.js/0.3.88/epub.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans leading-relaxed">
+
+  <!-- Password Protection Prompt -->
+  <div id="password-protect" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-8 shadow-lg text-center">
+      <h1 class="text-2xl font-semibold mb-4">Enter Password</h1>
+      <input type="password" id="password-input" placeholder="Password" class="border rounded-md p-2 w-full mb-4">
+      <button onclick="checkPassword()" class="bg-blue-500 text-white px-4 py-2 rounded-md">Enter</button>
+      <p id="error-msg" class="text-red-500 mt-4 hidden">Incorrect password. Try again.</p>
+    </div>
+  </div>
+
+  <!-- Website Header -->
+  <header class="bg-white shadow py-6">
+    <div class="container mx-auto text-center">
+      <h1 class="text-3xl font-semibold">My Book Collection</h1>
+      <p class="text-gray-600">Access and read your books from anywhere</p>
+    </div>
+  </header>
+
+  <!-- Book List Section -->
+  <main class="container mx-auto mt-10">
+    <section id="book-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Sample Book Card -->
+      <div class="bg-white shadow rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold">Book Title 1</h2>
+        <p class="text-gray-600">Author: Author Name</p>
+        <button onclick="openBook('https://example.com/your-book-link.epub')" class="text-blue-500 hover:underline">Read</button>
+      </div>
+      <!-- Add more book cards with the same structure here -->
+    </section>
+  </main>
+
+  <!-- EPUB Reader Container (Hidden by Default) -->
+  <div id="reader-container" class="fixed inset-0 bg-gray-900 bg-opacity-90 flex items-center justify-center hidden">
+    <div class="bg-white shadow-lg rounded-lg w-full h-full max-w-3xl p-4">
+      <button onclick="closeReader()" class="text-red-500 font-bold mb-4">Close</button>
+      <div id="reader" class="w-full h-[90vh]"></div>
+    </div>
+  </div>
+
+  <!-- JavaScript for Functionality -->
+  <script>
+    // Password Protection
+    function checkPassword() {
+      const passwordInput = document.getElementById('password-input').value;
+      const correctPassword = "yourpassword"; // Replace with your desired password
+      const errorMsg = document.getElementById('error-msg');
+
+      if (passwordInput === correctPassword) {
+        document.getElementById('password-protect').classList.add('hidden');
+      } else {
+        errorMsg.classList.remove('hidden');
+      }
+    }
+
+    // EPUB Reader Initialization
+    function openBook(url) {
+      const readerContainer = document.getElementById('reader-container');
+      readerContainer.classList.remove('hidden');
+
+      const book = ePub(url);
+      const rendition = book.renderTo("reader", {
+        width: "100%",
+        height: "100%"
+      });
+      rendition.display();
+    }
+
+    // Close Reader
+    function closeReader() {
+      document.getElementById('reader-container').classList.add('hidden');
+      document.getElementById('reader').innerHTML = ""; // Clear reader content
+    }
+  </script>
+</body>
+</html>
